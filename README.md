@@ -1,11 +1,13 @@
 # psadt-install-framework
-A framework to easily create PSADT installation script/package that will 'install' directory of source files to target system, along with creating shortcuts, registry entries, and uninstall .exe.
+This 'framework' should be used to 'install' a set of application source files on a system. The word 'install' is in quotes, because this framework is meant for applications that consist of a source file/folder, as opposed to having a traditional .exe/.msi installer.
 
-# Configuration Files:
+> [!NOTE]
+> Deploy-AppName.ps1 will copy the source files to system, create desktop/start menu shortcuts, and compile an uninstall.exe that is cited in a registry key created for the application in HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\.
 
-The main/only configuration file is: ./AppName/SupportFiles/config.json
 
-Inside this file, you can configure the following:
+## Configuration File (./SupportFiles/config.json):
+
+In the configuration json file, you can set the values listed below. Values are assigned to variables in the Deploy-AppName.ps1 script (it's the Deploy-Application.ps1 script from PSADT):
 
 - acl_info: defines which group to allow to access source files, as well as which permissions the group needs to be assigned.
 - application_name: The name of the application. This will be used to create the folder structure and the name of the PSADT script.
