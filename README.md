@@ -28,3 +28,5 @@ Each object in the uninstall_key list is a property of the application's registr
 - version: The version of the application. This will be used to create the folder structure and the name of the PSADT script.
 
 
+## Uninstall.exe info
+At the end of the installation script, an executable is compiled that does a few things including: removing source files, shortcuts, etc. from the system.
