@@ -13,7 +13,7 @@
             "SilentSwitches": "/quiet /norestart"
         }
     ],
-    "friendly_name": "Fancy Test Application Name",
+    "friendly_name": "(($appname$))",
     "shortcuts": [
         {
             "ShortcutTarget": "C:/(($appname$))/(($appname$)).exe",

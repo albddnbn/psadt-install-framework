@@ -57,7 +57,7 @@ Param (
     [switch]$DisableLogging = $false,
     [ValidateScript({ Test-Path $_ })]
     [Parameter(Mandatory = $false)]
-    [string]$ScriptConfig_File = "config.json" # holds variables for application name/etc.
+    [string]$ScriptConfig_File = "./SupportFiles/config.json" # holds variables for application name/etc.
 )
 
 
@@ -231,9 +231,9 @@ Try {
         $shortcuts_obj = $script_config.shortcuts
         if ($shortcuts_obj.length -ge 1) {
             Write-Log -Message "Creating shortcuts using objects contained in $($shortcuts_json.fullname)."
-            $shortcuts_json = Get-Content -Path "$($shortcuts_json.fullname)" -Raw | ConvertFrom-Json
+            # $shortcuts_json = Get-Content -Path "$($shortcuts_json.fullname)" -Raw | ConvertFrom-Json
 
-            ForEach ($shortcut_obj in $shortcuts_json) {
+            ForEach ($shortcut_obj in $shortcuts_obj) {
 
                 $splat = @{
                     "Path"         = $shortcut_obj.ShortcutLocation
@@ -342,7 +342,7 @@ Try {
         $SOURCE_FILE_DESTINATION = Join-Path -Path "$SOURCE_FILE_DESTINATION" -ChildPath "$APPLICATION_NAME"
 
         ## Show Welcome Message, Close (($appname$)) With a 60 Second Countdown Before Automatically Closing
-        Show-InstallationWelcome -CloseApps '(($exe$))' -CloseAppsCountdown 60
+        Show-InstallationWelcome -CloseApps "$CONFLICTING_PROCESSES" -CloseAppsCountdown 60
 
         ## Show Progress Message (With a Message to Indicate the Application is Being Uninstalled)
         Show-InstallationProgress -StatusMessage "Uninstalling the $appName Application. Please Wait..."
