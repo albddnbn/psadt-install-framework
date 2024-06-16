@@ -1,0 +1,222 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Collections.Hashtable</T>
+      <T>System.Object</T>
+    </TN>
+    <DCT>
+      <En>
+        <S N="Key">dependencies</S>
+        <Obj N="Value" RefId="1">
+          <TN RefId="1">
+            <T>System.Object[]</T>
+            <T>System.Array</T>
+            <T>System.Object</T>
+          </TN>
+          <LST>
+            <Obj RefId="2">
+              <TNRef RefId="0" />
+              <DCT>
+                <En>
+                  <S N="Key">SilentSwitches</S>
+                  <S N="Value">/quiet /norestart</S>
+                </En>
+                <En>
+                  <S N="Key">AppName</S>
+                  <S N="Value">Microsoft Visual C++ 2015-2022 Redistributable (x64)</S>
+                </En>
+                <En>
+                  <S N="Key">File</S>
+                  <S N="Value">vcredist_2022.x64.exe</S>
+                </En>
+              </DCT>
+            </Obj>
+          </LST>
+        </Obj>
+      </En>
+      <En>
+        <S N="Key">vendor</S>
+        <S N="Value"></S>
+      </En>
+      <En>
+        <S N="Key">source_destination</S>
+        <S N="Value">C:\\</S>
+      </En>
+      <En>
+        <S N="Key">version</S>
+        <S N="Value">1.0.0</S>
+      </En>
+      <En>
+        <S N="Key">uninstall_key</S>
+        <Obj N="Value" RefId="3">
+          <TNRef RefId="1" />
+          <LST>
+            <Obj RefId="4">
+              <TNRef RefId="0" />
+              <DCT>
+                <En>
+                  <S N="Key">Type</S>
+                  <S N="Value">String</S>
+                </En>
+                <En>
+                  <S N="Key">Name</S>
+                  <S N="Value">DisplayName</S>
+                </En>
+                <En>
+                  <S N="Key">Value</S>
+                  <S N="Value">(($))</S>
+                </En>
+              </DCT>
+            </Obj>
+            <Obj RefId="5">
+              <TNRef RefId="0" />
+              <DCT>
+                <En>
+                  <S N="Key">Type</S>
+                  <S N="Value">String</S>
+                </En>
+                <En>
+                  <S N="Key">Name</S>
+                  <S N="Value">InstallDate</S>
+                </En>
+                <En>
+                  <S N="Key">Value</S>
+                  <S N="Value"></S>
+                </En>
+              </DCT>
+            </Obj>
+            <Obj RefId="6">
+              <TNRef RefId="0" />
+              <DCT>
+                <En>
+                  <S N="Key">Type</S>
+                  <S N="Value">String</S>
+                </En>
+                <En>
+                  <S N="Key">Name</S>
+                  <S N="Value">DisplayVersion</S>
+                </En>
+                <En>
+                  <S N="Key">Value</S>
+                  <S N="Value"></S>
+                </En>
+              </DCT>
+            </Obj>
+            <Obj RefId="7">
+              <TNRef RefId="0" />
+              <DCT>
+                <En>
+                  <S N="Key">Type</S>
+                  <S N="Value">String</S>
+                </En>
+                <En>
+                  <S N="Key">Name</S>
+                  <S N="Value">Publisher</S>
+                </En>
+                <En>
+                  <S N="Key">Value</S>
+                  <S N="Value"></S>
+                </En>
+              </DCT>
+            </Obj>
+            <Obj RefId="8">
+              <TNRef RefId="0" />
+              <DCT>
+                <En>
+                  <S N="Key">Type</S>
+                  <S N="Value">String</S>
+                </En>
+                <En>
+                  <S N="Key">Name</S>
+                  <S N="Value">UninstallString</S>
+                </En>
+                <En>
+                  <S N="Key">Value</S>
+                  <S N="Value">C:/WINDOWS/syswow64/(($))/uninstall-(($)).exe</S>
+                </En>
+              </DCT>
+            </Obj>
+          </LST>
+        </Obj>
+      </En>
+      <En>
+        <S N="Key">conflicting_processes</S>
+        <S N="Value">7z,winrar</S>
+      </En>
+      <En>
+        <S N="Key">acl_info</S>
+        <Obj N="Value" RefId="9">
+          <TNRef RefId="0" />
+          <DCT>
+            <En>
+              <S N="Key">target_group</S>
+              <S N="Value">Everyone</S>
+            </En>
+            <En>
+              <S N="Key">assigned_permissions</S>
+              <S N="Value">ReadAndExecute, Write, Modify</S>
+            </En>
+          </DCT>
+        </Obj>
+      </En>
+      <En>
+        <S N="Key">author</S>
+        <S N="Value">(($))</S>
+      </En>
+      <En>
+        <S N="Key">friendly_name</S>
+        <S N="Value">(($))</S>
+      </En>
+      <En>
+        <S N="Key">shortcuts</S>
+        <Obj N="Value" RefId="10">
+          <TNRef RefId="1" />
+          <LST>
+            <Obj RefId="11">
+              <TNRef RefId="0" />
+              <DCT>
+                <En>
+                  <S N="Key">ShortcutLocation</S>
+                  <S N="Value">C:/Users/Public/Desktop/(($)).lnk</S>
+                </En>
+                <En>
+                  <S N="Key">ShortcutDescription</S>
+                  <S N="Value">Open (($)) application.</S>
+                </En>
+                <En>
+                  <S N="Key">ShortcutIconPath</S>
+                  <S N="Value"></S>
+                </En>
+                <En>
+                  <S N="Key">ShortcutTarget</S>
+                  <S N="Value">C:/(($))/(($)).exe</S>
+                </En>
+              </DCT>
+            </Obj>
+            <Obj RefId="12">
+              <TNRef RefId="0" />
+              <DCT>
+                <En>
+                  <S N="Key">ShortcutLocation</S>
+                  <S N="Value">C:/ProgramData/Microsoft/Windows/Start Menu/(($)).lnk</S>
+                </En>
+                <En>
+                  <S N="Key">ShortcutIconPath</S>
+                  <S N="Value">Open (($)) application.</S>
+                </En>
+                <En>
+                  <S N="Key">ShortcutTarget</S>
+                  <S N="Value">C:/(($))/(($)).exe</S>
+                </En>
+              </DCT>
+            </Obj>
+          </LST>
+        </Obj>
+      </En>
+      <En>
+        <S N="Key">application_name</S>
+        <S N="Value">(($))</S>
+      </En>
+    </DCT>
+  </Obj>
+</Objs>

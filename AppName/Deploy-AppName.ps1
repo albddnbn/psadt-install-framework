@@ -57,14 +57,19 @@ Param (
     [switch]$DisableLogging = $false,
     [ValidateScript({ Test-Path $_ })]
     [Parameter(Mandatory = $false)]
-    [string]$ScriptConfig_File = "./SupportFiles/config.json" # holds variables for application name/etc.
+    # [string]$ScriptConfig_File = "./SupportFiles/config.json" # holds variables for application name/etc.
+    [string]$ScriptConfig_File = "./SupportFiles/config.ps1" # holds variables for application name/etc.
+
 )
 
 
 Try {
     ## Set the script execution policy for this process
     Try { Set-ExecutionPolicy -ExecutionPolicy 'ByPass' -Scope 'Process' -Force -ErrorAction 'Stop' } Catch {}
-    $script_config = Get-Content $scriptconfig_file -Raw | ConvertFrom-Json
+    # $script_config = Get-Content $scriptconfig_file -Raw | ConvertFrom-Json
+    
+    . "$ScriptConfig_File" ## Dot source the script config .ps1 file to make script_config available
+
 
     ##*===============================================
     ##* VARIABLE DECLARATION
@@ -163,7 +168,11 @@ Try {
         Show-InstallationProgress -StatusMessage "Removing Any Existing Version of $installTitle. Please Wait..."
 
         Write-Log -Message "Removing existing source files and desktop/start menu shortcuts."
-        ForEach ($filesystem_item in @("$SOURCE_FILE_DESTINATION", "C:\Users\Public\Desktop\$APPLICATION_NAME", "C:\ProgramData\Microsoft\Windows\Start Menu\$APPLICATION_NAME")) {
+        ForEach ($filesystem_item in @(
+                # "$SOURCE_FILE_DESTINATION", ## Uncomment to delete any folder matching source files* before install
+                "C:\Users\Public\Desktop\$APPLICATION_NAME", 
+                "C:\ProgramData\Microsoft\Windows\Start Menu\$APPLICATION_NAME"
+            )) {
             Write-Log -Message "Removing any files/folders at: $filesystem_item."
             Remove-Item -Path "$filesystem_item*" -Recurse -Force # -ErrorAction SilentlyContinue
         }
@@ -289,8 +298,7 @@ Try {
         }
         # }  
 
-        ## Compile the uninstall.exe using PS2EXE
-        
+        ## Compile the uninstall.exe using PS2EXE module: https://github.com/MScholtes/PS2EXE
         $uninstall_exe_script = @"
 
         Write-Host "Removing any existing directory at: $SOURCE_FILE_DESTINATION."
@@ -306,6 +314,7 @@ Try {
         Remove-Item -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$APPLICATION_NAME" -Recurse -Force -ErrorAction SilentlyContinue
 
 "@
+        ## Make sure Nuget and PS2exe are available.
         if (-not (Get-PAckageProvider -Name 'Nuget' -ErrorAction SilentlyContinue)) {
             Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
         }
@@ -315,7 +324,9 @@ Try {
 
         $uninstall_exe_script | Out-File -FilePath "$dirFiles\uninstall.ps1" -Force
         $uninstall_exe_script = "$dirFiles\uninstall.ps1"
-        $uninstall_exe = "$SOURCE_FILE_DESTINATION\uninstall.exe"
+        ## Grab the uninstallstring value from registry items listed in config.ps1
+        $uninstall_exe = $script_config.uninstall_key | ? { $_.name -eq 'uninstallstring' } | select -exp value
+        # $uninstall_exe = "C:\WINDOWS\SysWow64\$APPLICATION_NAME\uninstall-$APPLICATION_NAME.exe"
 
         Write-Log -Message "Creating uninstall.exe using PS2EXE."
 

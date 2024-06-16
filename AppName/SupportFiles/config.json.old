@@ -4,7 +4,7 @@
         "assigned_permissions": "ReadAndExecute, Write, Modify"
     },
     "application_name": "(($appname$))",
-    "author": "Your Name",
+    "author": "(($author$))",
     "conflicting_processes": "7z,winrar",
     "dependencies": [
         {
@@ -28,7 +28,7 @@
         }
     ],
     "source_destination": "C:\\",
-    "vendor": "Test Vendor",
+    "vendor": "",
     "version": "1.0.0",
     "uninstall_key": [
         {
@@ -53,7 +53,7 @@
         },
         {
             "Name": "UninstallString",
-            "Value": "C:/WINDOWS/temp/uninstall-(($appname$)).exe",
+            "Value": "C:/WINDOWS/syswow64/(($appname$))/uninstall-(($appname$)).exe",
             "Type": "String"
         }
     ]
