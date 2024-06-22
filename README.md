@@ -1,6 +1,11 @@
 # psadt-install-framework
 This 'framework' should be used to 'install' a set of application source files on a system. The word 'install' is in quotes, because this framework is meant for applications that consist of a source file/folder, as opposed to having a traditional .exe/.msi installer.
 
+### Created by Alex B. / 2024
+
+> [!NOTE]
+> Walkthrough/demo of use soon to come!
+
 Powershell modules used in this script:
 1. [PSADT](https://psappdeploytoolkit.com/)
 2. [PS2exe](https://github.com/MScholtes/PS2EXE)
