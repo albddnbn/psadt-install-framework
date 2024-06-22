@@ -67,8 +67,17 @@ Try {
     ## Set the script execution policy for this process
     Try { Set-ExecutionPolicy -ExecutionPolicy 'ByPass' -Scope 'Process' -Force -ErrorAction 'Stop' } Catch {}
     # $script_config = Get-Content $scriptconfig_file -Raw | ConvertFrom-Json
-    
+
+    ## PSADT USER INSTALL FRAMEWORK CONFIG INTAKE / Variable setting.
     . "$ScriptConfig_File" ## Dot source the script config .ps1 file to make script_config available
+    $SOURCE_FILE_DESTINATION = $script_config.source_destination
+    $APPLICATION_NAME = $script_config.application_name
+    $APPLICATION_FRIENDLY_NAME = $script_config.friendly_name
+
+    $SOURCE_FILE_DESTINATION = Join-Path -Path "$SOURCE_FILE_DESTINATION" -ChildPath "$APPLICATION_NAME"
+
+    ## Single string - comma-separated list of processes to close before install/uninstall
+    $CONFLICTING_PROCESSES = $script_config.conflicting_processes
 
 
     ##*===============================================
@@ -76,7 +85,7 @@ Try {
     ##*===============================================
     ## Variables: Application
     [string]$appVendor = $script_config.vendor
-    [string]$appName = $script_config.application_name
+    [string]$appName = $APPLICATION_NAME
     [string]$appVersion = $script_config.version
     [string]$appArch = ''
     [string]$appLang = ''
@@ -86,20 +95,12 @@ Try {
     [string]$appScriptAuthor = $script_config.author
 
 
-    ## Create variables:
-    $SOURCE_FILE_DESTINATION = $script_config.source_destination
-    $APPLICATION_NAME = $script_config.application_name
-    $APPLICATION__FRIENDLY_NAME = $script_config.friendly_name
 
-    $SOURCE_FILE_DESTINATION = Join-Path -Path "$SOURCE_FILE_DESTINATION" -ChildPath "$APPLICATION_NAME"
-
-    ## Single string - comma-separated list of processes to close before install/uninstall
-    $CONFLICTING_PROCESSES = $script_config.conflicting_processes
 
     ##*===============================================
     ## Variables: Install Titles (Only set here to override defaults set by the toolkit)
     [string]$installName = $APPLICATION_NAME
-    [string]$installTitle = $APPLICATION__FRIENDLY_NAME
+    [string]$installTitle = $APPLICATION_FRIENDLY_NAME
 
     ##* Do not modify section below
     #region DoNotModify
@@ -169,7 +170,7 @@ Try {
 
         Write-Log -Message "Removing existing source files and desktop/start menu shortcuts."
         ForEach ($filesystem_item in @(
-                # "$SOURCE_FILE_DESTINATION", ## Uncomment to delete any folder matching source files* before install
+                "$SOURCE_FILE_DESTINATION", ## Uncomment to delete any folder matching source files* before install
                 "C:\Users\Public\Desktop\$APPLICATION_NAME", 
                 "C:\ProgramData\Microsoft\Windows\Start Menu\$APPLICATION_NAME"
             )) {
@@ -324,7 +325,7 @@ Try {
 
         $uninstall_exe_script | Out-File -FilePath "$dirFiles\uninstall.ps1" -Force
         $uninstall_exe_script = "$dirFiles\uninstall.ps1"
-        ## Grab the uninstallstring value from registry items listed in config.ps1
+        ## Grab the uninstallstring value from registry items listed in config.ps1 
         $uninstall_exe = $script_config.uninstall_key | ? { $_.name -eq 'uninstallstring' } | select -exp value
         # $uninstall_exe = "C:\WINDOWS\SysWow64\$APPLICATION_NAME\uninstall-$APPLICATION_NAME.exe"
 
