@@ -38,13 +38,13 @@ $script_config = @{
     friendly_name         = "(($appname$))" # Friendly name of the application, used for Interactive/Non-Interactive installs
     shortcuts             = @(
         [pscustomobject]@{
-            ShortcutTarget      = "C:/$source_destination/(($appname$))/(($appname$)).exe"        ## Desktop / Start menu shortcuts will target this file.
+            ShortcutTarget      = "$source_destination/(($appname$))/(($appname$)).exe"        ## Desktop / Start menu shortcuts will target this file.
             ShortcutLocation    = "C:/Users/Public/Desktop/(($appname$)).lnk" ## Desktop shortcut location
             # ShortcutIconPath    = ""                                          ## Path to .ico/icon file for the shortcut
             ShortcutDescription = "Open (($appname$)) application."           ## Description of the shortcut
         },
         [pscustomobject]@{
-            ShortcutTarget   = "C:/$source_destination/(($appname$))/(($appname$)).exe"           ## Desktop / Start menu shortcuts will target this file.
+            ShortcutTarget   = "$source_destination/(($appname$))/(($appname$)).exe"           ## Desktop / Start menu shortcuts will target this file.
             ShortcutLocation = "C:/ProgramData/Microsoft/Windows/Start Menu/(($appname$)).lnk" # System start menu location
             # ShortcutIconPath    = ""                                          ## Path to .ico/icon file for the shortcut
             ShortcutIconPath = "Open (($appname$)) application."                ## Icon path for the shortcut
