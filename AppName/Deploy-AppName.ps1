@@ -246,10 +246,10 @@ Try {
             ForEach ($shortcut_obj in $shortcuts_obj) {
 
                 $splat = @{
-                    "Path"         = $shortcut_obj.ShortcutLocation
-                    "TargetPath"   = $shortcut_obj.ShortcutTarget
-                    "IconLocation" = $shortcut_obj.ShortcutIconPath
-                    "Description"  = $shortcut_obj.ShortcutDescription
+                    "Path"        = $shortcut_obj.ShortcutLocation
+                    "TargetPath"  = $shortcut_obj.ShortcutTarget
+                    # "IconLocation" = $shortcut_obj.ShortcutIconPath
+                    "Description" = $shortcut_obj.ShortcutDescription
                 }
 
                 New-Shortcut @splat
