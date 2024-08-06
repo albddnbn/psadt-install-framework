@@ -1,7 +1,7 @@
 ## ----------------------------------------------------------------------------
 ## Change the name of this file to config.ps1 after items have been filled out!
 ## ----------------------------------------------------------------------------
-$source_destination = "C:/" # Source destination of the application
+$source_destination = "(($source_destination$))" # Source destination of the application
 ## This file is 'dot-sourced' towards the top of the Deploy-AppName.ps1 script to make the $script_config variable
 ## available in the deployment script.
 $script_config = @{
@@ -14,7 +14,7 @@ $script_config = @{
     ## It's also used in registry items created, and desktop/start menu shortcuts.
 
     author                = "" # Author of the script (probably you)
-    conflicting_processes = "(($appname$))" ## Comma-separated list of processes that will be closed before install/uninstalls
+    conflicting_processes = "(($conflicting_processes$))" ## Comma-separated list of processes that will be closed before install/uninstalls
     ## are run. As is, the script would close the 7zip and winRAR processes.
 
     ## Deploy-AppName.ps1 will loop through all objects in this array and attempt to install each one.
@@ -38,13 +38,13 @@ $script_config = @{
     friendly_name         = "(($appname$))" # Friendly name of the application, used for Interactive/Non-Interactive installs
     shortcuts             = @(
         [pscustomobject]@{
-            ShortcutTarget      = "$source_destination/(($appname$))/(($appname$)).exe"        ## Desktop / Start menu shortcuts will target this file.
+            ShortcutTarget      = "$source_destination/(($appname$))/(($app_exe$)).exe"        ## Desktop / Start menu shortcuts will target this file.
             ShortcutLocation    = "C:/Users/Public/Desktop/(($appname$)).lnk" ## Desktop shortcut location
             # ShortcutIconPath    = ""                                          ## Path to .ico/icon file for the shortcut
             ShortcutDescription = "Open (($appname$)) application."           ## Description of the shortcut
         },
         [pscustomobject]@{
-            ShortcutTarget   = "$source_destination/(($appname$))/(($appname$)).exe"           ## Desktop / Start menu shortcuts will target this file.
+            ShortcutTarget   = "$source_destination/(($appname$))/(($app_exe$)).exe"           ## Desktop / Start menu shortcuts will target this file.
             ShortcutLocation = "C:/ProgramData/Microsoft/Windows/Start Menu/(($appname$)).lnk" # System start menu location
             # ShortcutIconPath    = ""                                          ## Path to .ico/icon file for the shortcut
             ShortcutIconPath = "Open (($appname$)) application."                ## Icon path for the shortcut

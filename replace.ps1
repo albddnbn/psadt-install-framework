@@ -26,4 +26,37 @@ Rename-Item -Path ".\AppName\Deploy-AppName.ps1" -NewName "Deploy-$input.ps1" -F
 ## Rename the AppName directory:
 Rename-Item -Path ".\AppName" -NewName $input -Force
 
+## Change conflicting_processes in config.ps1 file:
+Write-host "For example, the applicaion executable for VS Code is code.exe"
+$process_name = Read-Host "Enter the application .exe / process name."
+if ($process_name -like "*.exe") {
+    $process_name = $process_name -replace ".exe", ""
+}
+
+Write-Host "Enter names of any other processes that need to be closed before install/uninstall."
+do {
+    $process_name = Read-Host "Enter process name. Press Enter to finish."
+    if ($process_name) {
+        $conflicting_processes += ",$process_name"
+    }
+} until (-not $process_name)
+
+$conflicting_process_list = $process_name + $conflicting_processes
+
+$content = Get-Content -Path $filePath
+
+$updatedContent = $content -replace '\(\(\$conflicting_processes\$\)\)', $conflicting_process_list
+
+$updatedContent | Set-Content -Path $filePath
+
+## Set Source file destination
+Write-host "Reply of C:\ will cause C:\$input folder to be created. This is where application files will be stored."
+$source_folder_dest = Read-Host "Enter source folder destination."
+
+$content = Get-Content -Path $filePath
+
+$updatedContent = $content -replace '\(\(\$source_destination\$\)\)', $source_folder_dest
+
+$updatedContent | Set-Content -Path $filePath
+
 
