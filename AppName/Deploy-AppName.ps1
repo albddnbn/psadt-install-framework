@@ -334,6 +334,8 @@ Try {
 
         Write-Log -Message "Creating uninstall.exe using PS2EXE."
 
+        New-Item -Path "C:\WINDOWS\SysWow64\$APPLICATION_NAME\" -Itemtype 'directory' | out-null
+
         Invoke-PS2exe $uninstall_exe_script $uninstall_exe -requireAdmin -Description "Uninstall the $APPLICATION_NAME application."
 
         ## Restart Windows Explorer
