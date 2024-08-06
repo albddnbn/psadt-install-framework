@@ -245,11 +245,14 @@ Try {
 
             ForEach ($shortcut_obj in $shortcuts_obj) {
 
+                $shortcut_location = $shortcut_obj.ShortcutLocation
+                $shortcut_target = $shortcut_obj.ShortcutTarget
+
                 $splat = @{
-                    "Path"        = $shortcut_obj.ShortcutLocation
-                    "TargetPath"  = $shortcut_obj.ShortcutTarget
+                    "Path"        = $shortcut_location
+                    "TargetPath"  = $shortcut_target
                     # "IconLocation" = $shortcut_obj.ShortcutIconPath
-                    "Description" = $shortcut_obj.ShortcutDescription
+                    "Description" = "Open the $appname application."
                 }
 
                 New-Shortcut @splat
