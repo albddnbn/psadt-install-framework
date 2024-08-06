@@ -70,7 +70,7 @@ Try {
 
     ## PSADT USER INSTALL FRAMEWORK CONFIG INTAKE / Variable setting.
     . "$ScriptConfig_File" ## Dot source the script config .ps1 file to make script_config available
-    $SOURCE_FILE_DESTINATION = $script_config.source_destination
+    $SOURCE_FILE_DESTINATION = $source_destination
     $APPLICATION_NAME = $script_config.application_name
     $APPLICATION_FRIENDLY_NAME = $script_config.friendly_name
 
