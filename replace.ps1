@@ -26,13 +26,13 @@ if ($process_name -like "*.exe") {
 
 Write-Host "Enter names of any other processes that need to be closed before install/uninstall."
 do {
-    $process_name = Read-Host "Enter process name. Press Enter to finish."
-    if ($process_name) {
-        $conflicting_processes += ",$process_name"
+    $additional_process = Read-Host "Enter process name. Press Enter to finish."
+    if ($additional_process) {
+        $conflicting_processes += ",$additional_process"
     }
-} until (-not $process_name)
+} until (-not $additional_process)
 
-$conflicting_process_list = $process_name + $conflicting_processes
+$conflicting_process_list = "$process_name$conflicting_processes"
 
 $content = Get-Content -Path $filePath
 
