@@ -1,9 +1,8 @@
-## ----------------------------------------------------------------------------
-## Change the name of this file to config.ps1 after items have been filled out!
-## ----------------------------------------------------------------------------
-$source_destination = "(($source_destination$))" # Source destination of the application
 ## This file is 'dot-sourced' towards the top of the Deploy-AppName.ps1 script to make the $script_config variable
 ## available in the deployment script.
+
+$source_destination = "(($source_destination$))" # Source destination of the application
+
 $script_config = @{
     acl_info              = @{
         target_group         = "Everyone" ## This group will be granted the permissions below, to the source file directory.
