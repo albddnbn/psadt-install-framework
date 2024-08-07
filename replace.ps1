@@ -59,10 +59,10 @@ Write-Host "Replaced ((`$source_destination$)) with $source_folder_dest in $file
 New-Item -Path ".\AppName\Files" -ItemType Directory -Force | Out-Null
 
 ## Rename the Deploy-AppName.ps1 file:
-Rename-Item -Path ".\AppName\Deploy-AppName.ps1" -NewName "Deploy-$input.ps1" -Force
+Rename-Item -Path ".\AppName\Deploy-AppName.ps1" -NewName "Deploy-$app_name.ps1" -Force
 
 ## Rename the AppName directory:
-Rename-Item -Path ".\AppName" -NewName $input -Force
+Rename-Item -Path ".\AppName" -NewName $app_name -Force
 
 
 
