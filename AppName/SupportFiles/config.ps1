@@ -23,12 +23,12 @@ $script_config = @{
     ##  -- Get-InstalledApplication -Name "*<insert part of dependency name>*" -Wildcard
     ## SilentSwitches are used to install the dependency silently.
     dependencies          = @(
-        # @{
+        # [pscustomobject]@{
         #     File           = "vcredist_2022.x64.exe"
         #     AppName        = "Microsoft Visual C++ 2015-2022 Redistributable (x64)"
         #     SilentSwitches = "/quiet /norestart" # Switches for silent installation
         # }
-        # , @{
+        # , [pscustomobject]@{
         #     File           = "installer file (msi/exe)"
         #     AppName        = "Display Name from registry or Installed Apps"
         #     SilentSwitches = "/quiet /norestart" # Switches for silent installation
