@@ -41,6 +41,11 @@ $updatedContent = $content -replace '\(\(\$conflicting_processes\$\)\)', $confli
 $updatedContent | Set-Content -Path $filePath
 Write-Host "Replaced ((`$conflicting_processes$)) with $conflicting_process_list in $filePath`n"
 
+$content = Get-Content -Path $filePath
+$updatedContent = $content -replace '\(\(\$app_exe\$\)\)', $process_name
+$updatedContent | Set-Content -Path $filePath
+Write-Host "Replaced ((`$app_exe$)) with $process_name in $filePath`n"
+
 
 ## Set Source file destination
 Write-host "Reply of C:\ will cause C:\$app_name folder to be created. This is where application files will be stored."
