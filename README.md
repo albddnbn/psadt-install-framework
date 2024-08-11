@@ -1,5 +1,7 @@
 # psadt-install-framework
 
+![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?logo=powershell&logoColor=white)
+
 ## Created by Alex B., 2024
 
 This 'framework' should be used to 'install' an application on a Windows system. 'Install' is in quotes because this framework
