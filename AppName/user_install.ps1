@@ -14,7 +14,7 @@ if (-not (Test-Path $shortcut_folder -ErrorAction SilentlyContinue)) {
     New-Item -Path $shortcut_folder -ItemType Directory | Out-null
 }
 
-@("C:\Users\$TargetUser\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\$ApplicationNAme\$ApplicationName.lnk",
-    "C:\Users\$TargetUser\Desktop\$ApplicationName.lnk") | % {
+@("C:\Users\$TargetUser\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\$ApplicationNAme\",
+    "C:\Users\$TargetUser\Desktop\") | % {
     Copy-Item -Path "$TargetFolder\$ApplicationName.lnk" -Destination "$_"
 }

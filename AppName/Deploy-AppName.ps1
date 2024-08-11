@@ -265,7 +265,7 @@ Try {
             $Existing_Users | % {
                 Write-Log -Message "Beginning install for $_"
                 Write-Host "Beginning install for $_ - source file dir is: $SOURCE_FILE_DESTINATION" -foregroundcolor yellow
-                Powershell.exe -ExecutionPolicy Bypass ./user_install.ps1 -TargetFolder `"$SOURCE_FILE_DESTINATION`" -TargetUser "$_"
+                Powershell.exe -ExecutionPolicy Bypass ./user_install.ps1 -TargetUser "$_"
             }
 
         }
