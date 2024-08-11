@@ -79,6 +79,8 @@ Try {
     ## Single string - comma-separated list of processes to close before install/uninstall
     $CONFLICTING_PROCESSES = $script_config.conflicting_processes
 
+    $USER_INSTALL_BOOL = $user_install
+
 
     ##*===============================================
     ##* VARIABLE DECLARATION
@@ -236,50 +238,88 @@ Try {
         ##*===============================================
         [string]$installPhase = 'Post-Installation'
 
-        ## Create shortcuts using shortcuts.json
-        # $shortcuts_json = Get-Childitem -Path "$dirSupportFiles" -File "shortcuts.json" -File -ErrorAction SilentlyContinue
-        $shortcuts_obj = $script_config.shortcuts
-        if ($shortcuts_obj.length -ge 1) {
-            Write-Log -Message "Creating shortcuts using objects contained in $($shortcuts_json.fullname)."
-            # $shortcuts_json = Get-Content -Path "$($shortcuts_json.fullname)" -Raw | ConvertFrom-Json
+        ## if it's a user install, we can copy the user_install.ps1 script to source destination
+        ## After setting the default value for TargetFolder parameter.
+        $user_install_scriptcontent = Get-Content -Path "user_install.ps1"
+        $updatedContent = $user_install_scriptcontent -replace '\(\(\$default_path\$\)\)', $SOURCE_FILE_DESTINATION
+        $updatedContent | Set-Content -Path "user_install.ps1"
 
-            ForEach ($shortcut_obj in $shortcuts_obj) {
+        Copy-Item -Path "user_install.ps1" -Destination "$SOURCE_FILE_DESTINATION\"
 
-                $shortcut_location = $shortcut_obj.ShortcutLocation
-                $shortcut_target = $shortcut_obj.ShortcutTarget
+        ## If it's a user install:
+        if ($USER_INSTALL_BOOL) {
+            ## Get Shortcut Target from one of the shortcut objects in config.
+            $Shortcut_Target = ($script_config.shortcuts | select -first 1).ShortcutTarget
 
-                $splat = @{
-                    "Path"        = $shortcut_location
-                    "TargetPath"  = $shortcut_target
-                    # "IconLocation" = $shortcut_obj.ShortcutIconPath
-                    "Description" = "Open the $appname application."
-                }
+            $Shortcut_Exe = $shortcut_target | split-path -Leaf
+            $Shortcut_Folder = (Get-Item $shortcut_target).DirectoryName | split-path -leaf
 
-                New-Shortcut @splat
-                Write-Log -Message "Created shortcut w/target: $shortcut_target, location on system: $shortcut_location."
+            $splat = @{
+                "Path"        = "$SOURCE_FILE_DESTINATION\$appname.lnk"
+                "TargetPath"  = "C:\Users\%USERNAME%\$Shortcut_Folder\$Shortcut_Exe"
+                # "IconLocation" = $shortcut_obj.ShortcutIconPath
+                "Description" = "Open the $appname application."
             }
+
+            ## Create shortcut template and store in source_destination
+            New-ShortCut @splat
+
+            ## Install for existing users using the user_install.ps1 script.
+            $Existing_Users = Get-ChildItem -Path 'C:\Users' -Exclude Default*, Public, Administrator | Select -Exp Name
+            $Existing_Users | % {
+                Write-Log -Message "Beginning install for $_"
+                Write-Host "Beginning install for $_ - source file dir is: $SOURCE_FILE_DESTINATION" -foregroundcolor yellow
+                Powershell.exe -ExecutionPolicy Bypass ./user_install.ps1 -TargetFolder `"$SOURCE_FILE_DESTINATION`" -TargetUser "$_"
+            }
+
         }
         else {
-            Write-Log -Message "No shortcuts specified for creation in $dirSupportFiles/$scriptconfig_file."
+            ## If it's a system install
+
+            ## Create shortcuts using shortcuts.json
+            # $shortcuts_json = Get-Childitem -Path "$dirSupportFiles" -File "shortcuts.json" -File -ErrorAction SilentlyContinue
+            $shortcuts_obj = $script_config.shortcuts
+            if ($shortcuts_obj.length -ge 1) {
+                Write-Log -Message "Creating shortcuts using objects contained in $($shortcuts_json.fullname)."
+                # $shortcuts_json = Get-Content -Path "$($shortcuts_json.fullname)" -Raw | ConvertFrom-Json
+
+                ForEach ($shortcut_obj in $shortcuts_obj) {
+
+                    $shortcut_location = $shortcut_obj.ShortcutLocation
+                    $shortcut_target = $shortcut_obj.ShortcutTarget
+
+                    $splat = @{
+                        "Path"        = $shortcut_location
+                        "TargetPath"  = $shortcut_target
+                        # "IconLocation" = $shortcut_obj.ShortcutIconPath
+                        "Description" = "Open the $appname application."
+                    }
+
+                    New-Shortcut @splat
+                    Write-Log -Message "Created shortcut w/target: $shortcut_target, location on system: $shortcut_location."
+                }
+            }
+            else {
+                Write-Log -Message "No shortcuts specified for creation in $dirSupportFiles/$scriptconfig_file."
+            }
+            # }
+
+
+            ## ACL variables:
+            $acl_group = $script_config.acl_info.target_group
+            $acl_permissions = $script_config.acl_info.assigned_permissions
+
+            Write-Log -Message "Configuring ACL to give $acl_group $acl_permissions permissions to $SOURCE_FILE_DESTINATION." -Severity 2
+
+            ## Configure ACL for SOURCE_FILE_DESTINATION
+            $acl = Get-ACL -Path "$SOURCE_FILE_DESTINATION"
+            # $Everyone_AccessRule = [System.Security.AccessControl.FileSystemAccessRule]::new("Everyone", "FullControl", "ContainerInherit, ObjectInherit", "None", "Allow")
+            # $App_Access_Rule = [System.Security.AccessControl.FileSystemAccessRule]::new("$APP_USERS_GROUP", "ReadAndExecute, Write, Modify", "ContainerInherit, ObjectInherit", "None", "Allow")
+            $App_Access_Rule = [System.Security.AccessControl.FileSystemAccessRule]::new("$acl_group", "$acl_permissions", "ContainerInherit, ObjectInherit", "None", "Allow")
+
+            $acl.AddAccessRule($App_Access_Rule)
+            $acl | Set-ACL -Path "$SOURCE_FILE_DESTINATION"
         }
-        # }
-
-
-        ## ACL variables:
-        $acl_group = $script_config.acl_info.target_group
-        $acl_permissions = $script_config.acl_info.assigned_permissions
-
-        Write-Log -Message "Configuring ACL to give $acl_group $acl_permissions permissions to $SOURCE_FILE_DESTINATION." -Severity 2
-
-        ## Configure ACL for SOURCE_FILE_DESTINATION
-        $acl = Get-ACL -Path "$SOURCE_FILE_DESTINATION"
-        # $Everyone_AccessRule = [System.Security.AccessControl.FileSystemAccessRule]::new("Everyone", "FullControl", "ContainerInherit, ObjectInherit", "None", "Allow")
-        # $App_Access_Rule = [System.Security.AccessControl.FileSystemAccessRule]::new("$APP_USERS_GROUP", "ReadAndExecute, Write, Modify", "ContainerInherit, ObjectInherit", "None", "Allow")
-        $App_Access_Rule = [System.Security.AccessControl.FileSystemAccessRule]::new("$acl_group", "$acl_permissions", "ContainerInherit, ObjectInherit", "None", "Allow")
-
-        $acl.AddAccessRule($App_Access_Rule)
-        $acl | Set-ACL -Path "$SOURCE_FILE_DESTINATION"
-
         ## Create an Uninstall Key in the Registry at: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\(($appname$))
         ## uses uninstall_reg_key.json to create the key.
         # $uninstall_reg_json = Get-ChildItem -Path "$dirSupportFiles" -Filter "uninstall_reg_key.json" -File -ErrorAction SilentlyContinue
@@ -318,6 +358,29 @@ Try {
         Remove-Item -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$APPLICATION_NAME" -Recurse -Force -ErrorAction SilentlyContinue
 
 "@
+
+        ## if its a user install - add on to the uninstall script.
+        if ($USER_INSTALL_BOOL) {
+            $uninstall_exe_script += @"
+            `$Existing_Users = Get-ChildItem -Path 'C:\Users' -Exclude Default*,Public,Administrator | Select -Exp Name
+            `$Existing_Users | % {
+                ## Remove the ApplicationName Directory:
+                Remove-Item -Path "C:\Users\`$_\$ApplicationName" -Recurse -ErrorAction SilentlyContinue
+
+                ## Remove Desktop/Start Menu shortcuts:
+                `$Shortcuts = @(
+                "C:\Users\`$_\Desktop\$ApplicationName.lnk",
+                "C:\Users\`$_\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\$ApplicationName\"
+                )
+                ForEach(`$SingleShortcut in `$Shortcuts) {
+                    Remove-Item -Path "`$SingleShortcut" -Recurse -ErrorAction SilentlyContinue
+                }
+            }
+
+            ## Remove scheduled task:
+            Unregister-ScheduledTask -TaskName "$APPLICATION_NAME - USER" -Confirm:`$false -ErrorAction SilentlyContinue 
+"@
+        }
         ## Make sure Nuget and PS2exe are available.
         if (-not (Get-PAckageProvider -Name 'Nuget' -ErrorAction SilentlyContinue)) {
             Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
@@ -337,6 +400,13 @@ Try {
         New-Item -Path "C:\WINDOWS\SysWow64\$APPLICATION_NAME\" -Itemtype 'directory' | out-null
 
         Invoke-PS2exe $uninstall_exe_script $uninstall_exe -requireAdmin -Description "Uninstall the $APPLICATION_NAME application."
+
+        ## Create scheduled task to run on any user login
+        $task_trigger = New-ScheduledTaskTrigger -AtLogOn
+        $task_principal = New-ScheduledTaskPrincipal -GroupId 'Users'
+        $task_action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File user_install.ps1" -WorkingDirectory "$SOURCE_FILE_DESTINATION"
+
+        Register-ScheduledTask -TaskName "$APPLICATION_NAME - USER"-Trigger $task_trigger -Principal $task_principal -Action $task_action
 
         ## Restart Windows Explorer
         Update-Desktop
@@ -380,15 +450,31 @@ Try {
             Remove-Item -Path "$installation_dir*" -Recurse -ErrorAction SilentlyContinue
         }
 
-        if ($UseBackup) {
-            $SOURCE_BACKUP_DIR = Join-Path -Path "$SOURCE_BACKUP_DIR" -ChildPath "$APPLICATION_NAME"
-
-            Remove-Item -Path "$SOURCE_BACKUP_DIR" -Recurse -Force
-        }
-
-
         ## Remove the uninstall registry key
         Remove-RegistryKey -Key "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$APPLICATION_NAME" -Recurse -Force
+
+        if ($USER_INSTALL_BOOL) {
+
+            $Existing_Users = Get-ChildItem -Path 'C:\Users' -Exclude Default*, Public, Administrator | Select -Exp Name
+            $Existing_Users | % {
+                ## Remove the ApplicationName Directory:
+                Remove-Item -Path "C:\Users\$_\$APPLICATION_NAME" -Recurse -ErrorAction SilentlyContinue
+
+                ## Remove Desktop/Start Menu shortcuts:
+                $Shortcuts = @(
+                    "C:\Users\$_\Desktop\$APPLICATION_NAME.lnk",
+                    "C:\Users\$_\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\$APPLICATION_NAME\"
+                )
+                ForEach ($SingleShortcut in $Shortcuts) {
+                    Remove-Item -Path "$SingleShortcut" -Recurse -ErrorAction SilentlyContinue
+                }
+            }
+
+            ## Remove scheduled task:
+            Unregister-ScheduledTask -TaskName "$APPLICATION_NAME - USER" -Confirm:$false -ErrorAction SilentlyContinue 
+
+        }
+
 
         ##*===============================================
         ##* POST-UNINSTALLATION
