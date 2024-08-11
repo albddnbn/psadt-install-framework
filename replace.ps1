@@ -69,7 +69,7 @@ do {
     $user_install_directive = Read-Host "Enter user install directive (y/n)"
 } until ($user_install_directive.tolower() -in "y", "n")
 
-if ($user_install_directve.tolower() -eq "y") {
+if ($user_install_directive.tolower() -eq "y") {
     $content = Get-Content -Path $filePath
     $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', $true
     $updatedContent | Set-Content -Path $filePath
