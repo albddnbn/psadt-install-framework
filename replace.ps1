@@ -59,7 +59,28 @@ $updatedContent = $content -replace '\(\(\$source_destination\$\)\)', $source_fo
 $updatedContent | Set-Content -Path $filePath
 Write-Host "Replaced ((`$source_destination$)) with $source_folder_dest in $filePath`n"
 
+Write-Host "Would you like this to be a user install?" -Foregroundcolor Yellow
+Write-Host "A user install will still copy source files to source_destination, but will also copy files to user's home `
+             drives and create desktop/start menu shortcuts pointing to the user's copy of the executable."
+Write-Host "A " -NoNewline
+Write-Host "SCHEDULED TASK " -Foregroundcolor yellow -NoNewline
+Write-Host "will be created to perform the copy / shortcut creation operations for future users logged in to the system."
+do {
+    $user_install_directive = Read-Host "Enter user install directive (y/n)"
+} until ($user_install_directive.tolower() -in "y", "n")
 
+if ($user_install_directve.tolower() -eq "y") {
+    $content = Get-Content -Path $filePath
+    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', $true
+    $updatedContent | Set-Content -Path $filePath
+    Write-Host "Replaced ((`$user_install_directive$)) with $true in $filePath`n"
+}
+else {
+    $content = Get-Content -Path $filePath
+    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', $false
+    $updatedContent | Set-Content -Path $filePath
+    Write-Host "Replaced ((`$user_install_directive$)) with $false in $filePath`n"
+}
 ## Create 'Files' directory for application files:
 New-Item -Path ".\AppName\Files" -ItemType Directory -Force | Out-Null
 

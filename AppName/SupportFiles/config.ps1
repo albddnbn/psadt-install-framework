@@ -3,6 +3,8 @@
 
 $source_destination = "(($source_destination$))" # Source destination of the application
 
+$user_install = "(($user_install_directive$))"
+
 $script_config = @{
     acl_info              = @{
         target_group         = "Everyone" ## This group will be granted the permissions below, to the source file directory.
