@@ -238,16 +238,12 @@ Try {
         ##*===============================================
         [string]$installPhase = 'Post-Installation'
 
-        ## if it's a user install, we can copy the user_install.ps1 script to source destination
-        ## After setting the default value for TargetFolder parameter.
-        $user_install_scriptcontent = Get-Content -Path "user_install.ps1"
-        $updatedContent = $user_install_scriptcontent -replace '\(\(\$default_path\$\)\)', $SOURCE_FILE_DESTINATION
-        $updatedContent | Set-Content -Path "user_install.ps1"
-
-        Copy-Item -Path "user_install.ps1" -Destination "$SOURCE_FILE_DESTINATION\"
-
         ## If it's a user install:
         if ($USER_INSTALL_BOOL) {
+            # copy the user_install.ps1 script to source destination
+            Copy-Item -Path "user_install.ps1" -Destination "$SOURCE_FILE_DESTINATION\"
+
+
             ## Get Shortcut Target from one of the shortcut objects in config.
             $Shortcut_Target = ($script_config.shortcuts | select -first 1).ShortcutTarget
 
