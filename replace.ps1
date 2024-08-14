@@ -76,7 +76,7 @@ if ($user_install_directive.tolower() -eq "y") {
     Write-Host "Replaced ((`$user_install_directive$)) with $true in $filePath`n"
 
     ## Set default TargetFolder parameter in user_install.ps1:
-    $full_Targetfolder_path = Join-Path "$source_file_dest" "$app_name"
+    $full_Targetfolder_path = Join-Path "$source_folder_dest" "$app_name"
 
     $content = Get-Content -Path '.\AppName\user_install.ps1'
     $updatedContent = $content -replace '\(\(\$default_path\$\)\)', $trfull_Targetfolder_pathue
