@@ -71,9 +71,9 @@ do {
 
 if ($user_install_directive.tolower() -eq "y") {
     $content = Get-Content -Path $filePath
-    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', $true
+    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', "yes"
     $updatedContent | Set-Content -Path $filePath
-    Write-Host "Replaced ((`$user_install_directive$)) with $true in $filePath`n"
+    Write-Host "Replaced ((`$user_install_directive$)) with 'yes' in $filePath`n"
 
     ## Set default TargetFolder parameter in user_install.ps1:
     $full_Targetfolder_path = Join-Path "$source_folder_dest" "$app_name"
@@ -85,9 +85,9 @@ if ($user_install_directive.tolower() -eq "y") {
 }
 else {
     $content = Get-Content -Path $filePath
-    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', $false
+    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', "no"
     $updatedContent | Set-Content -Path $filePath
-    Write-Host "Replaced ((`$user_install_directive$)) with $false in $filePath`n"
+    Write-Host "Replaced ((`$user_install_directive$)) with 'no' in $filePath`n"
 }
 ## Create 'Files' directory for application files:
 New-Item -Path ".\AppName\Files" -ItemType Directory -Force | Out-Null

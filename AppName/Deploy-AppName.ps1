@@ -79,7 +79,12 @@ Try {
     ## Single string - comma-separated list of processes to close before install/uninstall
     $CONFLICTING_PROCESSES = $script_config.conflicting_processes
 
-    $USER_INSTALL_BOOL = $user_install
+    if ($user_install.tolower() -eq 'y') {
+        $USER_INSTALL_BOOL = $true
+    }
+    else {
+        $USER_INSTALL_BOOL = $false
+    }
 
 
     ##*===============================================
@@ -301,7 +306,6 @@ Try {
                 Write-Log -Message "No shortcuts specified for creation in $dirSupportFiles/$scriptconfig_file."
             }
             # }
-
 
             ## ACL variables:
             $acl_group = $script_config.acl_info.target_group
