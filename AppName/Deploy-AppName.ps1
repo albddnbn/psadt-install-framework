@@ -243,9 +243,6 @@ Try {
             # copy the user_install.ps1 script to source destination
             Copy-Item -Path "user_install.ps1" -Destination "$SOURCE_FILE_DESTINATION\"
 
-            ## Copy over shortcut to public desktop:
-            Copy-Item -Path "$SOURCE_FILE_DESTINATION\$APPLICATION_NAME.lnk" -Destination "C:\Users\Public\Desktop\"
-
             ## Get Shortcut Target from one of the shortcut objects in config.
             $Shortcut_Target = ($script_config.shortcuts | select -first 1).ShortcutTarget
 
@@ -261,6 +258,9 @@ Try {
 
             ## Create shortcut template and store in source_destination
             New-ShortCut @splat
+
+            ## Copy over shortcut to public desktop:
+            Copy-Item -Path "$SOURCE_FILE_DESTINATION\$APPLICATION_NAME.lnk" -Destination "C:\Users\Public\Desktop\"
 
             ## Install for existing users using the user_install.ps1 script.
             $Existing_Users = Get-ChildItem -Path 'C:\Users' -Exclude Default*, Public, Administrator | Select -Exp Name
