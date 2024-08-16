@@ -129,8 +129,8 @@ else {
 
 ## DIRECTORY STRUCTURE CREATION:
 
-## Create 'Files' directory for application files:
-New-Item -Path ".\AppName\Files" -ItemType Directory -Force | Out-Null
+## Create 'Files' and application name directory (to hold source files)
+New-Item -Path ".\AppName\Files\$app_name" -ItemType Directory -Force | Out-Null
 
 ## Rename the Deploy-AppName.ps1 file:
 Rename-Item -Path ".\AppName\Deploy-AppName.ps1" -NewName "Deploy-$app_name.ps1" -Force
