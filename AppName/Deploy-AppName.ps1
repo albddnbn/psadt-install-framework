@@ -66,9 +66,8 @@ Param (
 Try {
     ## Set the script execution policy for this process
     Try { Set-ExecutionPolicy -ExecutionPolicy 'ByPass' -Scope 'Process' -Force -ErrorAction 'Stop' } Catch {}
-    # $script_config = Get-Content $scriptconfig_file -Raw | ConvertFrom-Json
 
-    ## PSADT USER INSTALL FRAMEWORK CONFIG INTAKE / Variable setting.
+    ## ---- PSADT-INSTALL-FRAMEWORK VARIABLE SETTING (from SupportFiles/config.ps1) ----
     . "$ScriptConfig_File" ## Dot source the script config .ps1 file to make script_config available
     $SOURCE_FILE_DESTINATION = $source_destination
     $APPLICATION_NAME = $script_config.application_name
@@ -79,13 +78,14 @@ Try {
     ## Single string - comma-separated list of processes to close before install/uninstall
     $CONFLICTING_PROCESSES = $script_config.conflicting_processes
 
+    ## User install   = copy source files to current/future user's home directories
+    ## System install = only copy source files to single source destination
     if ($user_install.tolower() -eq 'y') {
         $USER_INSTALL_BOOL = $true
     }
     else {
         $USER_INSTALL_BOOL = $false
     }
-
 
     ##*===============================================
     ##* VARIABLE DECLARATION
@@ -100,9 +100,6 @@ Try {
     [string]$appScriptVersion = '1.0.0'
     [string]$appScriptDate = ''
     [string]$appScriptAuthor = $script_config.author
-
-
-
 
     ##*===============================================
     ## Variables: Install Titles (Only set here to override defaults set by the toolkit)
@@ -397,18 +394,25 @@ Try {
         $uninstall_exe = $script_config.uninstall_key | ? { $_.name -eq 'uninstallstring' } | select -exp value
         # $uninstall_exe = "C:\WINDOWS\SysWow64\$APPLICATION_NAME\uninstall-$APPLICATION_NAME.exe"
 
-        Write-Log -Message "Creating uninstall.exe using PS2EXE."
+        Write-Log -Message "Compiling UNINSTALL.EXE using PS2EXE module." -Severity 2
 
-        New-Item -Path "C:\WINDOWS\SysWow64\$APPLICATION_NAME\" -Itemtype 'directory' | out-null
+        # New-Item -Path "C:\WINDOWS\SysWow64\$APPLICATION_NAME\" -Itemtype 'directory' | out-null
+        New-Folder -Path "C:\WINDOWS\SysWow64\$APPLICATION_NAME\"
 
         Invoke-PS2exe $uninstall_exe_script $uninstall_exe -requireAdmin -Description "Uninstall the $APPLICATION_NAME application."
 
-        ## Create scheduled task to run on any user login
-        $task_trigger = New-ScheduledTaskTrigger -AtLogOn
-        $task_principal = New-ScheduledTaskPrincipal -GroupId 'Users'
-        $task_action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File user_install.ps1" -WorkingDirectory "$SOURCE_FILE_DESTINATION"
+        ## If this is a 'user' installation - create the scheduled task to copy source files / set shortcuts for future users.
+        if ($USER_INSTALL_BOOL) {
+            ## Create scheduled task to run on any user login
+            $task_trigger = New-ScheduledTaskTrigger -AtLogOn
+            $task_principal = New-ScheduledTaskPrincipal -GroupId 'Users'
+            $task_action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File user_install.ps1" -WorkingDirectory "$SOURCE_FILE_DESTINATION"
 
-        Register-ScheduledTask -TaskName "$APPLICATION_NAME - USER"-Trigger $task_trigger -Principal $task_principal -Action $task_action
+            $task_name = "$APPLICATION_NAME - USER"
+            ## Remove any existing scheduled task for 'installing the application'
+            Get-ScheduledTask -TaskName "$task_name" -ErrorAction SilentlyContinue | Unregister-ScheduledTask -Confirm:$false -ErrorAction SilentlyContinue
+            Register-ScheduledTask -TaskName "$task_name"-Trigger $task_trigger -Principal $task_principal -Action $task_action
+        }
 
         ## Restart Windows Explorer
         Update-Desktop
