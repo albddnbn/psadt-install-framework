@@ -108,7 +108,7 @@ do {
 
 if ($user_install_directive.tolower() -eq "y") {
     $content = Get-Content -Path $filePath
-    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', "yes"
+    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', "y"
     $updatedContent | Set-Content -Path $filePath
     Write-Host "Replaced ((`$user_install_directive$)) with 'yes' in $filePath`n"
 
@@ -122,7 +122,7 @@ if ($user_install_directive.tolower() -eq "y") {
 }
 else {
     $content = Get-Content -Path $filePath
-    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', "no"
+    $updatedContent = $content -replace '\(\(\$user_install_directive\$\)\)', "n"
     $updatedContent | Set-Content -Path $filePath
     Write-Host "Replaced ((`$user_install_directive$)) with 'no' in $filePath`n"
 }
