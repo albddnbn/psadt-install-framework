@@ -5,7 +5,8 @@ param(
 )
 
 if (-not $TargetUser) {
-    $TargetUser = (Get-Process -Name explorer -IncludeUserName -erroraction silentlycontinue | Select -Exp Username).split()[-1]
+    $TargetUser = Get-CimInstance -Class Win32_ComputerSystem | Select -Exp UserName
+    $TargetUser = $targetuser.split('\')[-1]
 }
 
 ## Get Application name from target folder:

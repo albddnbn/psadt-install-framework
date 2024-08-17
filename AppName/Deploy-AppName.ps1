@@ -406,7 +406,7 @@ Try {
             ## Create scheduled task to run on any user login
             $task_trigger = New-ScheduledTaskTrigger -AtLogOn
             $task_principal = New-ScheduledTaskPrincipal -GroupId 'Users'
-            $task_action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-File user_install.ps1" -WorkingDirectory "$SOURCE_FILE_DESTINATION"
+            $task_action = New-ScheduledTaskAction -Execute "Powershell.exe" -Argument "-ExecutionPolicy Bypass -File user_install.ps1" -WorkingDirectory "$SOURCE_FILE_DESTINATION"
 
             $task_name = "$APPLICATION_NAME - USER"
             ## Remove any existing scheduled task for 'installing the application'
