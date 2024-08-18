@@ -75,3 +75,5 @@ Each dependency object contains these properties:
 
 1. [PSADT](https://psappdeploytoolkit.com/)
 2. [PS2exe](https://github.com/MScholtes/PS2EXE)
+
+## Coming Soon: dependency config functionality through replace.ps1, another walkthrough featuring Handbrake install (Handbrake has .NET 8.0 dependency).
