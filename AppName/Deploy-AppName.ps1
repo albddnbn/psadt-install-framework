@@ -364,12 +364,12 @@ Try {
             `$Existing_Users = Get-ChildItem -Path 'C:\Users' -Exclude Default*,Public,Administrator | Select -Exp Name
             `$Existing_Users | % {
                 ## Remove the ApplicationName Directory:
-                Remove-Item -Path "C:\Users\`$_\$ApplicationName" -Recurse -ErrorAction SilentlyContinue
+                Remove-Item -Path "C:\Users\`$_\$APPLICATION_NAME" -Recurse -ErrorAction SilentlyContinue
 
                 ## Remove Desktop/Start Menu shortcuts:
                 `$Shortcuts = @(
-                "C:\Users\`$_\Desktop\$ApplicationName.lnk",
-                "C:\Users\`$_\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\$ApplicationName\"
+                "C:\Users\`$_\Desktop\$APPLICATION_NAME.lnk",
+                "C:\Users\`$_\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\$APPLICATION_NAME\"
                 )
                 ForEach(`$SingleShortcut in `$Shortcuts) {
                     Remove-Item -Path "`$SingleShortcut" -Recurse -ErrorAction SilentlyContinue
