@@ -1,6 +1,5 @@
 param(
     [string]$TargetFolder = '(($default_path$))',
-    # [string]$TargetUser = "$env:USERNAME"
     [string]$TargetUser
 )
 
