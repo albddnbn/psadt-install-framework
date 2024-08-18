@@ -24,18 +24,18 @@ $script_config = @{
     ##  -- If the PSADT module is available - you can check your dependency display names like this:
     ##  -- Get-InstalledApplication -Name "*<insert part of dependency name>*" -Wildcard
     ## SilentSwitches are used to install the dependency silently.
-    dependencies          = @(
-        # [pscustomobject]@{
-        #     File           = "vcredist_2022.x64.exe"
-        #     AppName        = "Microsoft Visual C++ 2015-2022 Redistributable (x64)"
-        #     SilentSwitches = "/quiet /norestart" # Switches for silent installation
-        # }
-        # , [pscustomobject]@{
-        #     File           = "installer file (msi/exe)"
-        #     AppName        = "Display Name from registry or Installed Apps"
-        #     SilentSwitches = "/quiet /norestart" # Switches for silent installation
-        # }
-    )
+    # dependencies          = @(
+    #     # [pscustomobject]@{
+    #     #     File           = "vcredist_2022.x64.exe"
+    #     #     AppName        = "Microsoft Visual C++ 2015-2022 Redistributable (x64)"
+    #     #     SilentSwitches = "/quiet /norestart" # Switches for silent installation
+    #     # }
+    #     # , [pscustomobject]@{
+    #     #     File           = "installer file (msi/exe)"
+    #     #     AppName        = "Display Name from registry or Installed Apps"
+    #     #     SilentSwitches = "/quiet /norestart" # Switches for silent installation
+    #     # }
+    # )
     friendly_name         = "(($appname$))" # Friendly name of the application, used for Interactive/Non-Interactive installs
     shortcuts             = @(
         [pscustomobject]@{
