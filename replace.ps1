@@ -127,6 +127,9 @@ else {
     Write-Host "Replaced ((`$user_install_directive$)) with 'no' in $filePath`n"
 }
 
+## Dependencies??
+
+
 ## DIRECTORY STRUCTURE CREATION:
 
 ## Create 'Files' and application name directory (to hold source files)
@@ -137,6 +140,7 @@ Rename-Item -Path ".\AppName\Deploy-AppName.ps1" -NewName "Deploy-$app_name.ps1"
 
 ## Rename the AppName directory:
 Rename-Item -Path ".\AppName" -NewName $app_name -Force
+
 
 
 
