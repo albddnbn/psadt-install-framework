@@ -183,7 +183,7 @@ Try {
         }
 
         ## CHECK FOR AND INSTALL ANY DEPENDENCIES USING DEPENDENCIES.JSON:
-        $dependencies_obj = $script_config.dependencies
+        $dependencies_obj = $DEPENDENCIES_LIST
 
         # Cycle through each dependency object in the json file, and install.
         ForEach ($single_dependency in $dependencies_obj) {

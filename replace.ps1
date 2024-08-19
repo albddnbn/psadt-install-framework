@@ -127,7 +127,63 @@ else {
     Write-Host "Replaced ((`$user_install_directive$)) with 'no' in $filePath`n"
 }
 
-## Dependencies??
+## Dependencies = $DEPENDENCIES_LIST
+$reply = ""
+do {
+    $reply = Read-Host "Does the $app_name application have any dependencies? (y/n)"
+} until ($reply.tolower() -in @("y", "n"))
+
+if ($reply.tolower() -eq 'y') {
+    ## get content of config.ps1:
+    $content = Get-Content -Path $filePath
+
+    ## each dependency in the config is structured like this:
+    #     # [pscustomobject]@{
+    #     #     File           = "vcredist_2022.x64.exe"
+    #     #     AppName        = "Microsoft Visual C++ 2015-2022 Redistributable (x64)"
+    #     #     SilentSwitches = "/quiet /norestart" # Switches for silent installation
+    #     # }
+
+    $add_another = "y"
+
+    $dependency_content = "`$DEPENDENCIES_LIST = @("
+    while ($add_another.tolower() -eq 'y') {
+        Write-Host "Example: File           = 'vcredist_2022.x64.exe'"
+        $dependency_file = Read-Host "Enter the dependency file name."
+        Write-Host "`n"
+
+        Write-Host "Example: AppName        = 'Microsoft Visual C++ 2015-2022 Redistributable (x64)'"
+        $dependency_appname = Read-Host "Enter the dependency application name."
+        Write-Host "`n"
+
+        Write-Host "Example: SilentSwitches = '/install /quiet /norestart'"
+        $dependency_silent_switches = Read-Host "Enter the silent switches for the dependency installation."
+        Write-Host "`n"
+
+        $dependency = @"
+        [pscustomobject]@{
+            File           = "$dependency_file"
+            AppName        = "$dependency_appname"
+            SilentSwitches = "$dependency_silent_switches"
+        },
+"@
+
+        $dependency_content += $dependency
+        $add_another = Read-Host "Add another dependency? (y/n)"
+    }
+
+    ## if we're done adding dependencies - remove the last comma
+    $dependency_content = $dependency_content.Substring(0, $dependency_content.Length - 1)
+
+    ## close up the dependencies list:
+    $dependency_content += ")"
+
+    ## add it to config_content:
+    $content += "`n$dependency_content"
+
+    $content | Set-Content -Path $filePath
+}
+
 
 
 ## DIRECTORY STRUCTURE CREATION:
