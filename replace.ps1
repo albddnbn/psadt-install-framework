@@ -47,25 +47,25 @@ function Get-InstalledApp {
         # Loop through each uninstall key and display the properties
         foreach ($key in $uninstallKeys) {
             $keyPath = Join-Path -Path $path -ChildPath $key.PSChildName
-            $displayName = (Get-ItemProperty -Path $keyPath -Name “DisplayName" -ErrorAction SilentlyContinue).DisplayName
+            $displayName = (Get-ItemProperty -Path $keyPath -Name "DisplayName" -ErrorAction SilentlyContinue).DisplayName
             if ($displayName -like "*$ApplicationName*") {
                 # write-host $keypath
-                $uninstallString = (Get-ItemProperty -Path $keyPath -Name “UninstallString" -ErrorAction SilentlyContinue).UninstallString
-                # $version = (Get-ItemProperty -Path $keyPath -Name “DisplayVersion" -ErrorAction SilentlyContinue).DisplayVersion
-                # $publisher = (Get-ItemProperty -Path $keyPath -Name “Publisher" -ErrorAction SilentlyContinue).Publisher
-                # $installLocation = (Get-ItemProperty -Path $keyPath -Name “InstallLocation" -ErrorAction SilentlyContinue).InstallLocation
-                # $productcode = (Get-ItemProperty -Path $keyPath -Name “productcode" -ErrorAction SilentlyContinue).productcode
-                $installdate = (Get-ItemProperty -Path $keyPath -Name “installdate" -ErrorAction SilentlyContinue).installdate
+                $uninstallString = (Get-ItemProperty -Path $keyPath -Name "UninstallString" -ErrorAction SilentlyContinue).UninstallString
+                # $version = (Get-ItemProperty -Path $keyPath -Name "DisplayVersion" -ErrorAction SilentlyContinue).DisplayVersion
+                # $publisher = (Get-ItemProperty -Path $keyPath -Name "Publisher" -ErrorAction SilentlyContinue).Publisher
+                # $installLocation = (Get-ItemProperty -Path $keyPath -Name "InstallLocation" -ErrorAction SilentlyContinue).InstallLocation
+                # $productcode = (Get-ItemProperty -Path $keyPath -Name "productcode" -ErrorAction SilentlyContinue).productcode
+                $installdate = (Get-ItemProperty -Path $keyPath -Name "installdate" -ErrorAction SilentlyContinue).installdate
                 $App
                 if ($displayName) {
-                    Write-Host “DisplayName: $displayName"
-                    Write-Host “UninstallString: $uninstallString"
-                    # Write-Host “Version: $version"
-                    # Write-Host “Publisher: $publisher"
-                    # Write-Host “InstallLocation: $installLocation"
+                    Write-Host "DisplayName: $displayName"
+                    Write-Host "UninstallString: $uninstallString"
+                    # Write-Host "Version: $version"
+                    # Write-Host "Publisher: $publisher"
+                    # Write-Host "InstallLocation: $installLocation"
                     # write-host "product code: $productcode"
                     write-host "installdate: $installdate"
-                    Write-Host “—————————————————`n"
+                    Write-Host "—————————————————`n"
                 }
             }
         }
