@@ -25,6 +25,54 @@
     Description: Configures most/all values for PSADT script.
 
 #>
+function Get-InstalledApp {
+    # param(
+    #     [string]$ApplicationName
+    # )
+    Write-Host "Script will search registry for any installed applications containing search string."
+    $ApplicationName = Read-Host "Enter application name:"
+    # Define the registry paths for uninstall information
+    $registryPaths = @(
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+    # Loop through each registry path and retrieve the list of subkeys
+    foreach ($path in $registryPaths) {
+        $uninstallKeys = Get-ChildItem -Path $path -ErrorAction SilentlyContinue
+        # Skip if the registry path doesn’t exist
+        if (-not $uninstallKeys) {
+            continue
+        }
+        # Loop through each uninstall key and display the properties
+        foreach ($key in $uninstallKeys) {
+            $keyPath = Join-Path -Path $path -ChildPath $key.PSChildName
+            $displayName = (Get-ItemProperty -Path $keyPath -Name “DisplayName" -ErrorAction SilentlyContinue).DisplayName
+            if ($displayName -like "*$ApplicationName*") {
+                # write-host $keypath
+                $uninstallString = (Get-ItemProperty -Path $keyPath -Name “UninstallString" -ErrorAction SilentlyContinue).UninstallString
+                # $version = (Get-ItemProperty -Path $keyPath -Name “DisplayVersion" -ErrorAction SilentlyContinue).DisplayVersion
+                # $publisher = (Get-ItemProperty -Path $keyPath -Name “Publisher" -ErrorAction SilentlyContinue).Publisher
+                # $installLocation = (Get-ItemProperty -Path $keyPath -Name “InstallLocation" -ErrorAction SilentlyContinue).InstallLocation
+                # $productcode = (Get-ItemProperty -Path $keyPath -Name “productcode" -ErrorAction SilentlyContinue).productcode
+                $installdate = (Get-ItemProperty -Path $keyPath -Name “installdate" -ErrorAction SilentlyContinue).installdate
+                $App
+                if ($displayName) {
+                    Write-Host “DisplayName: $displayName"
+                    Write-Host “UninstallString: $uninstallString"
+                    # Write-Host “Version: $version"
+                    # Write-Host “Publisher: $publisher"
+                    # Write-Host “InstallLocation: $installLocation"
+                    # write-host "product code: $productcode"
+                    write-host "installdate: $installdate"
+                    Write-Host “—————————————————`n"
+                }
+            }
+        }
+    }
+
+}
+
 
 ## Ensures the configuration file (config.ps1) is available.
 $config_ps1_file = Get-ChildItem -Path "." -Filter "config.ps1" -Recurse -File -ErrorAction SilentlyContinue
@@ -144,10 +192,21 @@ if ($reply.tolower() -eq 'y') {
     #     #     SilentSwitches = "/quiet /norestart" # Switches for silent installation
     #     # }
 
+
     $add_another = "y"
 
     $dependency_content = "`$DEPENDENCIES_LIST = @("
     while ($add_another.tolower() -eq 'y') {
+
+        Write-Host "You will have to enter the dependency installer filename, application Display Name, and silent install switches."
+        Write-Host "If the dependency is installed on this system - you can search the registry for the Display Name."
+        Write-Host "`n"
+        $search_reply = ""
+        do {
+            $search_reply = Read-Host "Would you like to search the registry for application info? (y/n)"
+        } until ($search_reply.tolower() -in @("y", "n"))
+
+
         Write-Host "Example: File           = 'vcredist_2022.x64.exe'"
         $dependency_file = Read-Host "Enter the dependency file name."
         Write-Host "`n"
