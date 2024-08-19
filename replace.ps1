@@ -65,7 +65,7 @@ function Get-InstalledApp {
                     # Write-Host "InstallLocation: $installLocation"
                     # write-host "product code: $productcode"
                     write-host "installdate: $installdate"
-                    # Write-Host "—————————————————`n"
+                    Write-Host "`n"
                 }
             }
         }
