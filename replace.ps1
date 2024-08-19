@@ -65,7 +65,7 @@ function Get-InstalledApp {
                     # Write-Host "InstallLocation: $installLocation"
                     # write-host "product code: $productcode"
                     write-host "installdate: $installdate"
-                    Write-Host "—————————————————`n"
+                    # Write-Host "—————————————————`n"
                 }
             }
         }
@@ -197,15 +197,12 @@ if ($reply.tolower() -eq 'y') {
 
     $dependency_content = "`$DEPENDENCIES_LIST = @("
     while ($add_another.tolower() -eq 'y') {
+        Write-Host "You will need to know the dependency's DisplayName and silent install switches."
+        $search_reply = Read-Host "Would you like to search the registry for application info? (y/n)"
 
-        Write-Host "You will have to enter the dependency installer filename, application Display Name, and silent install switches."
-        Write-Host "If the dependency is installed on this system - you can search the registry for the Display Name."
-        Write-Host "`n"
-        $search_reply = ""
-        do {
-            $search_reply = Read-Host "Would you like to search the registry for application info? (y/n)"
-        } until ($search_reply.tolower() -in @("y", "n"))
-
+        if ($search_reply.tolower() -eq 'y') {
+            Get-InstalledApp
+        }
 
         Write-Host "Example: File           = 'vcredist_2022.x64.exe'"
         $dependency_file = Read-Host "Enter the dependency file name."
