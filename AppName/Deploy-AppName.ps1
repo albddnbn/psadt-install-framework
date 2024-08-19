@@ -381,7 +381,7 @@ Try {
 "@
         }
         ## Make sure Nuget and PS2exe are available.
-        if (-not (Get-PAckageProvider -Name 'Nuget' -ErrorAction SilentlyContinue)) {
+        if (-not (Get-PAckageProvider -Name 'Nuget' -ListAvailable -ErrorAction SilentlyContinue)) {
             Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
         }
         if (-not (Get-Module -Name PS2EXE -ListAvailable -ErrorAction SilentlyContinue)) {
