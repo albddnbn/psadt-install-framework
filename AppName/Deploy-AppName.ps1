@@ -399,7 +399,7 @@ Try {
         # New-Item -Path "C:\WINDOWS\SysWow64\$APPLICATION_NAME\" -Itemtype 'directory' | out-null
         Remove-Item -Path "C:\WINDOWS\SysWow64\$APPLICATION_NAME\" -Recurse -Force -ErrorAction SilentlyContinue
         New-Folder -Path "C:\WINDOWS\SysWow64\$APPLICATION_NAME\"
-
+        
         Invoke-PS2exe $uninstall_exe_script $uninstall_exe -requireAdmin -Description "Uninstall the $APPLICATION_NAME application."
 
         ## If this is a 'user' installation - create the scheduled task to copy source files / set shortcuts for future users.
